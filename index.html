@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Поиск слов по регулярному выражению</title>
+</head>
+
+<body>
+    <h1>Поиск слов по регулярному выражению</h1>
+
+    <label for="regex-input">Введите регулярное выражение:</label><br>
+    <input style="width: 400px;" type="text" id="regex-input" /><br>
+    <button onclick="searchWords()">Найти слова</button>
+
+    <div id="result-container"></div>
+
+    <script>
+        // Путь к файлу с текстом
+        const FILE_PATH = 'russian.txt';
+
+        // Массив слов из загруженного файла
+        let wordsArray = [];
+
+        // Загрузка текстового файла при загрузке страницы
+        window.onload = function () {
+            fetch(FILE_PATH)
+                .then(response => response.text())
+                .then(text => {
+                    // Преобразуем текст в массив слов
+                    wordsArray = text.split('\n');
+                });
+        };
+
+        function searchWords() {
+            // Получаем регулярное выражение из текстового поля
+            const regexInput = document.getElementById('regex-input').value;
+            if (regexInput == "") {
+                alert("Пустое выражение")
+                return;
+            }
+            const regex = new RegExp(regexInput, 'i');
+
+            console.log("Поиск начался")
+            // Ищем все совпадения в массиве слов
+            const matchedWords = wordsArray.filter(word => regex.test(word));
+            console.log(`Найдено ${matchedWords.length} слов.`);
+
+            // Выводим найденные слова на страницу
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = '';
+            matchedWords.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.textContent = word;
+                resultContainer.appendChild(wordElement);
+            });
+
+        }
+    </script>
+</body>
+
+</html>
